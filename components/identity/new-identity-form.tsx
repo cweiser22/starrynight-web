@@ -5,6 +5,7 @@ import {useForm} from "react-hook-form";
 import {Input} from "@/components/ui/input";
 import { z } from "zod"
 import {Button} from "@/components/ui/button";
+import {createIdentity} from "@/app/actions";
 
 const formSchema = z.object({
     displayName: z.string().min(8).max(30),
@@ -12,11 +13,15 @@ const formSchema = z.object({
 
 
 export default function NewIdentityForm() {
-    const form = useForm<z.infer<typeof formSchema>>();
+    const form = useForm<z.infer<typeof formSchema>>({
+        defaultValues: {
+            displayName: ''
+        }
+    });
 
     function handleSubmit(form: z.infer<typeof formSchema>) {
         console.log(form);
-        
+        createIdentity(form.displayName);
     }
 
     return (

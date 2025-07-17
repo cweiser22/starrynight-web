@@ -1,15 +1,30 @@
 import {db} from "@/db";
 import {table} from "@/db/schema";
 
-export function createIdentity(displayName: string, userId: string){
-    return db.insert(table.identity).values({
+type IdentityMinimal = {
+    publicId: string;
+    displayName: string;
+}
+
+export async function createIdentity(displayName: string, userId: string): Promise<IdentityMinimal> {
+    const [result] =  await db.insert(table.identity).values({
         displayName: displayName,
         userId: userId
     }).returning()
+
+    if (!result.publicId || !result.displayName) {
+        throw new Error()
+    }
+
+    return {
+        publicId: result.publicId,
+        displayName: result.displayName,
+    } as IdentityMinimal;
 }
 
-export function listIdentitesByUserId(userId: string){
+export function listIdentitiesByUserId(userId: string) {
     return db.query.identity.findMany({
-        where: (posts, {eq}) => eq(table.user.id, userId)
+        where: (identities, {eq}) => eq(table.identity.userId, identities.userId)
     })
+
 }

@@ -32,7 +32,7 @@ beforeAll(async () => {
 })
 
 describe('createIdentity()', () => {
-    it('should insert a new identity', async () => {
+    it('should insert a new identities', async () => {
         const result = await createIdentity('Test User', testUser.id);
         expect(result[0].displayName).toBe('Test User');
     });
